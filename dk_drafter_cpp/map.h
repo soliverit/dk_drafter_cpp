@@ -29,6 +29,8 @@ public:
 	void clear();
 	/* Add a Player to the Map if they're aren't on it already. */
 	void addPlayer(Player player);
+	/* Get list of space activities */
+	std::vector<std::string> getActivityTypes();
 	/*
 		Parse a CSV file:
 
@@ -68,8 +70,11 @@ public:
 	std::shared_ptr<Player> findPlayer(int id);
 	/* Draw the Map to console: Just a dirty drawer for debugging or whatever */
 	void drawToConsole();
+	void drawPlayersToConsole();
 	/* Reconstruct the map with only Player(playerID)'s Tiles. Everything else is dirt */
 	Map* extractPlayerMap(int playerID);
+	/* Get all the tiles from a Map of a specific kind */
+	std::vector<Tile> getTilesByType(std::string type);
 	/* Create a clone */
 	Map* clone();
 	/* Merge another Map by replacing the original Map tiles with any non-DIRT tiles from the passed Map */

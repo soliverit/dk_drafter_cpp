@@ -99,10 +99,35 @@ bool Map::parseCSV(const std::string& csvPath) {
 		if (rowID == height)
 			break;
 	}
-	for (size_t rowID = 0; rowID < height; rowID++)
-		std::cout << "\n" << tiles[rowID][0].definition->label;
+
 	
 	return true;
+}
+/*=== Getters ===*/
+std::vector<std::string> Map::getActivityTypes() {
+	/* Create map of all Tile types with flag for is present in Map */
+	std::unordered_map<std::string, bool> activityTypes;
+	for (size_t activityTypeID = 0; activityTypeID < Tile::NO_OWNABLE_TYPES; activityTypeID++)
+		activityTypes[Tile::OWNABLE_TYPES[activityTypeID]] = false;
+	/* Flag Tile types present in the Map as present */
+	for (size_t rowID = 0; rowID < height; rowID++)
+		for (size_t cellID = 0; cellID < width; cellID++)
+			activityTypes[tiles[rowID][cellID].definition->label] = true;
+	/* Extract the list of present Tile types from the Tile type is present map */
+	std::vector<std::string> activities;
+	for (size_t activityTypeID = 0; activityTypeID < Tile::NO_OWNABLE_TYPES; activityTypeID++)
+		if (activityTypes[Tile::OWNABLE_TYPES[activityTypeID]])
+			activities.push_back(Tile::OWNABLE_TYPES[activityTypeID]);
+	return activities;
+}
+/* Get Tiles by their type */
+std::vector<Tile> Map::getTilesByType(std::string type) {
+	std::vector<Tile> matchedTiles;
+	for (size_t rowID = 0; rowID < height; rowID++)
+		for (size_t cellID = 0; cellID < width; cellID++)
+			if (tiles[rowID][cellID].definition->keyword == type)
+				matchedTiles.push_back(tiles[rowID][cellID]);
+	return matchedTiles;
 }
 /*=== Extract, filter, merge, clone ===*/
 Map* Map::extractPlayerMap(int id) {
@@ -129,20 +154,19 @@ Map* Map::extractPlayerMap(int id) {
 	for (size_t rowID = 0; rowID < height; rowID++)
 		for (size_t cellID = 0; cellID < width; cellID++) {
 			if (tiles[rowID][cellID].definition->ownable && tiles[rowID][cellID].ownedBy(id)) {
-				if (cellID < minX) minX = cellID - 1;
-				if (cellID > maxX) maxX = cellID + 1;
-				if (rowID < minY) minY = rowID - 1;
-				if (rowID > maxY) maxY = rowID + 1;
+				if (cellID < minX) minX = cellID;
+				if (cellID > maxX) maxX = cellID;
+				if (rowID < minY) minY = rowID;
+				if (rowID > maxY) maxY = rowID;
 			}
 		}
-	
-	size_t playerMapWidth = maxX - minX + 1;
+	minX--;
+	maxX++;
+	minY--;
+	maxY++;
+	size_t playerMapWidth = maxX - minX  + 1;
 	size_t playerMapHeight = maxY - minY + 1;
-	/* Not sure if this is necessary. See previous comment */
-	if (minX < 0) minX = 0;
-	if (maxX >= width) maxX--;
-	if (minY < 0) minY = 0;
-	if (maxY >= height) maxY--;
+
 	/*
 		Build the Player Map
 	*/
@@ -150,12 +174,12 @@ Map* Map::extractPlayerMap(int id) {
 	for (size_t rowID = minY; rowID <= maxY; rowID++)
 		for (size_t cellID = minX; cellID <= maxX; cellID++) {
 			Tile tile = tiles[rowID][cellID];
-			if (tile.ownedBy(id) || ! tile.definition->ownable) {
-				playerMap->tiles[rowID - minY][cellID - minX].update(tiles[rowID][cellID].definition, findPlayer(id));
-			}
+			if (tile.ownedBy(id) || ! tile.definition->ownable) 
+				playerMap->tiles[rowID - minY][cellID - minX].update(tiles[rowID][cellID].definition, findPlayer(id), cellID - minX, rowID - minY);
 		}
 	return playerMap;
 }
+
 /* Clone the map */
 Map* Map::clone() {
 	Map* map = new Map(width, height);
@@ -209,6 +233,21 @@ void Map::drawToConsole() {
 				row += "i";
 			else
 				row += ":";
+		}
+		std::cout << "\n" << row;
+	}
+
+}
+void Map::drawPlayersToConsole() {
+
+	for (size_t rowID = 0; rowID < height; rowID++) {
+		std::string row;
+		for (size_t cellID = 0; cellID < width; cellID++) {
+			Tile tile = tiles[rowID][cellID];
+			if (tile.definition->ownable)
+				row += std::to_string(tile.player->getID());
+			else
+				row += "-";
 		}
 		std::cout << "\n" << row;
 	}

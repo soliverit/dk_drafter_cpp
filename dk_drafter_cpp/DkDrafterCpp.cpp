@@ -5,13 +5,14 @@
 #include <iostream>
 // Project
 #include "map.h"
+#include "building.h"
 #include "print_helper.h"
 // Some useful constants
 const int MAP_SIZE = 26;
 const std::string CSV_PATH = "C:/workspaces/dungeon_keeper/dungeon_drafter/drafts/example.csv";
 int main()
 {  
-    Map* map = new Map(MAP_SIZE, MAP_SIZE, {Player("Player 1", 1), Player("Player 2", 2)});
+    Map* map = new Map(MAP_SIZE, 18, {Player("Player 1", 1), Player("Player 2", 2)});
     if (!map->parseCSV(CSV_PATH)) {
         std::cout << "\nProbably couldn't find the CSV";
         return 0;
@@ -19,6 +20,9 @@ int main()
     PrintHelper::PrintHeader("Draw map");
     map->drawToConsole();
     
+    Building building = Building(map);
+    //building.extractRooms();
+    return 0;
     Map* playerMap  = map->extractPlayerMap(1);
     Map* playerMap2 = playerMap->clone();
     /* Print stuff*/

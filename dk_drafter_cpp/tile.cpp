@@ -19,6 +19,7 @@ std::tuple<bool, std::shared_ptr<TileDefinition>, int> Tile::parseLabel(std::str
 	// Labels should be lower case
 	for (size_t charID = 0; charID < label.length(); charID++)
 		label[charID] = std::tolower(label[charID]);
+	
 	// Single character codes are unclaimed/unclaimable, like Lava, water, impenetrable
 	if (label.length() == 1) {
 		// If the label isn't found, it's invalid
@@ -46,6 +47,8 @@ std::tuple<bool, std::shared_ptr<TileDefinition>, int> Tile::parseLabel(std::str
 const std::string Tile::UNCLAIMED				= "UNCLAIMED";
 const std::string Tile::CLAIMED					= "CLAIMED";
 const std::string Tile::DIRT					= "DIRT";
+const std::string Tile::GOLD					= "GOLD";
+const std::string Tile::RUBY					= "RUBY";
 const std::string Tile::REINFORCED				= "REINFORCED";
 const std::string Tile::WATER					= "WATER";
 const std::string Tile::LAVA					= "LAVA";
@@ -66,8 +69,10 @@ const std::string Tile::TREASURE_ROOM			= "TREASURE_ROOM";
 const std::string Tile::WORKSHOP				= "WORKSHOP";
 // Keywords
 const std::string Tile::UNCLAIMED_KEYWORD		= "u";
-const std::string Tile::CLAIMED_KEYWORD			= "c";
+const std::string Tile::CLAIMED_KEYWORD			= "ca";
 const std::string Tile::DIRT_KEYWORD			= "d";
+const std::string Tile::GOLD_KEYWORD			= "g";
+const std::string Tile::RUBY_KEYWORD			= "y";
 const std::string Tile::REINFORCED_KEYWORD		= "r";
 const std::string Tile::WATER_KEYWORD			= "w";
 const std::string Tile::LAVA_KEYWORD			= "l";
@@ -86,6 +91,26 @@ const std::string Tile::TORTURE_CHAMBER_KEYWORD = "to";
 const std::string Tile::TRAINING_ROOM_KEYWORD	= "tr";
 const std::string Tile::TREASURE_ROOM_KEYWORD	= "ta";
 const std::string Tile::WORKSHOP_KEYWORD		= "wo";
+
+
+const size_t Tile::NO_TYPES							= 23;	// Arrays suck. can't get size directly
+const size_t Tile::NO_OWNABLE_TYPES					= 15;
+const size_t Tile::NO_ENVIRONMENT_TYPES				= 8;
+const std::string Tile::TYPES[]					= {
+	CLAIMED, 
+	UNCLAIMED, DIRT, GOLD, RUBY, REINFORCED, LAVA, WATER, IMPENETRABLE, BARRACKS,
+	BRIDGE, GRAVEYARD, GUARD_POST, HATCHERY, LAIR, LIBRARY, PRISON, SCAVENGER_ROOM, TEMPLE, 
+	TORTURE_CHAMBER, TRAINING_ROOM, TREASURE_ROOM, WORKSHOP
+};
+const std::string Tile::OWNABLE_TYPES[]			= {
+	//CLAIMED,	TODO: Something's wrong with circulation areas. Not necessary for prototype
+	BARRACKS, BRIDGE, GRAVEYARD, GUARD_POST, HATCHERY, LAIR, LIBRARY, PRISON,
+	SCAVENGER_ROOM, TEMPLE, TORTURE_CHAMBER, TRAINING_ROOM, TREASURE_ROOM, WORKSHOP
+};
+const std::string Tile::ENVIRONMENT_TYPES[]		= {
+	UNCLAIMED, DIRT, GOLD, RUBY, REINFORCED, LAVA, WATER, IMPENETRABLE
+};
+
 /*
 	Block properties hash
 */
@@ -93,6 +118,8 @@ std::unordered_map<std::string, std::shared_ptr<TileDefinition>> Tile::TILE_DEFI
 	{"UNCLAIMED", std::make_shared<TileDefinition>("u", "UNCLAIMED", false, std::tuple<int, int, int>(233, 022, 140))},
 	{"CLAIMED", std::make_shared<TileDefinition>("ca", "CLAIMED", std::tuple<int, int, int>(0,0,153))},
 	{"DIRT", std::make_shared<TileDefinition>("d", "DIRT", false, std::tuple<int, int, int>(0,0,0))},
+	{"GOLD", std::make_shared<TileDefinition>("g", "GOLD", false, std::tuple<int, int, int>(0,0,0))},
+	{"RUBY", std::make_shared<TileDefinition>("y", "RUBY", false, std::tuple<int, int, int>(0,0,0))},
 	{"REINFORCED", std::make_shared<TileDefinition>("r", "REINFORCED", false, std::tuple<int, int, int>(255, 255, 255))},
 	{"WATER", std::make_shared<TileDefinition>("w", "WATER", false, std::tuple<int, int, int>(0, 176, 240))},
 	{"LAVA", std::make_shared<TileDefinition>("l", "LAVA", false,  std::tuple<int, int, int>(204, 176, 0))},
@@ -115,6 +142,7 @@ std::unordered_map<std::string, std::shared_ptr<TileDefinition>> Tile::TILE_DEFI
 std::unordered_map<std::string, std::shared_ptr<TileDefinition>> Tile::TILE_DEFINITIONS_LABELED = {
 	{"u", TILE_DEFINITIONS_KEYWORDED[Tile::UNCLAIMED]},
 	{"ca",TILE_DEFINITIONS_KEYWORDED[Tile::CLAIMED]},
+	{"g", TILE_DEFINITIONS_KEYWORDED[Tile::GOLD]},
 	{"d", TILE_DEFINITIONS_KEYWORDED[Tile::DIRT]},
 	{"r", TILE_DEFINITIONS_KEYWORDED[Tile::REINFORCED]},
 	{"w", TILE_DEFINITIONS_KEYWORDED[Tile::WATER]},

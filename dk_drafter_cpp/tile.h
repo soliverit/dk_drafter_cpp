@@ -35,6 +35,8 @@ public:
 	static const std::string UNCLAIMED;			// Dug but not claimed 
 	static const std::string CLAIMED;			// Dug, claimed but no activity
 	static const std::string DIRT;				// Not dug
+	static const std::string GOLD;				// Austin Powers 3
+	static const std::string RUBY;				// Austin Powers 3
 	static const std::string REINFORCED;		// Reinforced wall
 	static const std::string WATER;				// Wet stuff
 	static const std::string LAVA;				// Hot wet stuff
@@ -54,9 +56,11 @@ public:
 	static const std::string TREASURE_ROOM;		// Treasure room
 	static const std::string WORKSHOP;			// Workshop
 
-	static const std::string UNCLAIMED_KEYWORD;	// Dug but not claimed 
-	static const std::string CLAIMED_KEYWORD;	// Dug, claimed but no activity
-	static const std::string DIRT_KEYWORD;		// Not dug
+	static const std::string UNCLAIMED_KEYWORD;			// Dug but not claimed 
+	static const std::string CLAIMED_KEYWORD;			// Dug, claimed but no activity
+	static const std::string DIRT_KEYWORD;				// Not dug
+	static const std::string GOLD_KEYWORD;				// Goldfinger
+	static const std::string RUBY_KEYWORD;				// Goldfinger
 	static const std::string REINFORCED_KEYWORD;		// Reinforced wall
 	static const std::string WATER_KEYWORD;				// Wet stuff
 	static const std::string LAVA_KEYWORD;				// Hot wet stuff
@@ -75,7 +79,13 @@ public:
 	static const std::string TRAINING_ROOM_KEYWORD;		// Trainig room
 	static const std::string TREASURE_ROOM_KEYWORD;		// Treasure room
 	static const std::string WORKSHOP_KEYWORD;			// Workshop
+	static const std::string TYPES[23];					// Array of the above types
+	static const std::string OWNABLE_TYPES[15];			// Array of the ownable above types
+	static const std::string ENVIRONMENT_TYPES[8];		// Array of the environment above types
 
+	static const size_t NO_TYPES;
+	static const size_t NO_OWNABLE_TYPES;
+	static const size_t NO_ENVIRONMENT_TYPES;
 	/*=== Instance methods ===*/
 	/* Is this tile owned by a Player? */
 	bool isOwned();
