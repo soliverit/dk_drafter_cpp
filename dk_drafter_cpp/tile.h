@@ -28,9 +28,9 @@ public:
 	//		int:			Player ID. Default 1.
 	//*/
 	static std::tuple<bool, std::shared_ptr<TileDefinition>, int> parseLabel(std::string label);// {
-	// Static members
-	static std::unordered_map < std::string, std::shared_ptr<TileDefinition>> TILE_DEFINITIONS_KEYWORDED;	// Keyword indexed Map of Tile Definitions 
-	static std::unordered_map<std::string, std::shared_ptr<TileDefinition>>  TILE_DEFINITIONS_LABELED;	// Label indexd Map of Tile Definitions
+	/*=== Static members ===*/
+	static std::unordered_map < std::string, std::shared_ptr<TileDefinition>> TILE_DEFINITIONS_LABELED;	// Keyword indexed Map of Tile Definitions 
+	static std::unordered_map<std::string, std::shared_ptr<TileDefinition>>  TILE_DEFINITIONS_KEYWORDED;	// Label indexd Map of Tile Definitions
 	
 	static const std::string UNCLAIMED;			// Dug but not claimed 
 	static const std::string CLAIMED;			// Dug, claimed but no activity
@@ -86,6 +86,9 @@ public:
 	static const size_t NO_TYPES;
 	static const size_t NO_OWNABLE_TYPES;
 	static const size_t NO_ENVIRONMENT_TYPES;
+
+	/*--- SBEM constants ---*/
+	static std::unordered_map<std::string, std::unordered_map<std::string, std::string>> TILE_SBEM_ACTIVITIES;
 	/*=== Instance methods ===*/
 	/* Is this tile owned by a Player? */
 	bool isOwned();

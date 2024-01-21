@@ -22,8 +22,15 @@ public:
 	Map();
 	/* Construct with custom size (doesn't change tiles[][] size */
 	Map(size_t width, size_t height);
-	/* Construct with custom size and some predefined Players*/
+	/* Construct with custom size and world coordinate system position*/
+	Map(size_t width, size_t height, size_t wcsX, size_t wcsY);
+	/* Construct with custom size and some predefined Players */
 	Map(size_t width, size_t height, std::vector<Player> players);
+	/* Construct with custom size, world coordinate position and predefined Players */
+	Map(size_t width, size_t height, size_t wcsX, size_t wcsY, std::vector<Player> players);
+	/*=== Static members ===*/
+	/* Compass directions */
+	
 	// Instance methods
 	/* Replace all Tiles in the tiles[][] array with unowned Tile::DIRT Tiles*/
 	void clear();
@@ -88,6 +95,8 @@ public:
 	// Instance members
 	size_t width;									// Width of the Map independent of the Tile column count
 	size_t height;									// Height of the Map independent of the Tile row count
+	size_t wcsX;									// World coordinate system X (for derived Maps)
+	size_t wcsY;									// World coordinate system Y (for derived Maps)
 	Tile	tiles[TILE_MAP_SIZE][TILE_MAP_SIZE];	// Full size array of Tiles independent of the Map width and height
 	std::vector<Player> players;					// Players...
 };

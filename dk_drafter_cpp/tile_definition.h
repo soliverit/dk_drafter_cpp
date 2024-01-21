@@ -4,7 +4,7 @@
 ===*/
 // Native 
 #include <string>
-#include <tuple>s
+#include <tuple>
 // Project
 #include "player.h"
 /*

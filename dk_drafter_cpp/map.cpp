@@ -6,11 +6,19 @@
 #include "map.h"
 #include "tile.h"
 Map::Map() : width(TILE_MAP_SIZE), height(TILE_MAP_SIZE){}
-Map::Map(size_t width, size_t height) : width(width), height(height) {
+Map::Map(size_t width, size_t height) : width(width), height(height), wcsX(0), wcsY(0) {
 	// Fill the full map (TILE_MAP_SIZE, not x*y) with Tile::DIRT.
 	clear();
 }
-Map::Map(size_t width, size_t height, std::vector<Player> players) : width(width), height(height), players(players) {
+Map::Map(size_t width, size_t height, size_t wcsX, size_t wcsY) : width(width), height(height), wcsX(wcsX), wcsY(wcsY) {
+	// Fill the full map (TILE_MAP_SIZE, not x*y) with Tile::DIRT.
+	clear();
+}
+Map::Map(size_t width, size_t height, std::vector<Player> players) : width(width), height(height), players(players), wcsX(0), wcsY(0) {
+	// Fill the full map (TILE_MAP_SIZE, not x*y) with Tile::DIRT.
+	clear();
+}
+Map::Map(size_t width, size_t height, size_t wcsX, size_t wcsY,  std::vector<Player> players) : width(width), height(height), wcsX(wcsX), wcsY(wcsY),  players(players) {
 	// Fill the full map (TILE_MAP_SIZE, not x*y) with Tile::DIRT.
 	clear();
 }
@@ -26,7 +34,7 @@ void Map::clear() {
 	*/
 	for (size_t rowID = 0; rowID < TILE_MAP_SIZE; rowID++)
 		for (size_t cellID = 0; cellID < TILE_MAP_SIZE; cellID++) {
-				tiles[rowID][cellID]	= Tile(Tile::TILE_DEFINITIONS_KEYWORDED[Tile::DIRT], nullptr, cellID, rowID);
+				tiles[rowID][cellID]	= Tile(Tile::TILE_DEFINITIONS_LABELED[Tile::DIRT], nullptr, cellID, rowID);
 		}
 }
 std::shared_ptr<Player> Map::findPlayer(int id) {

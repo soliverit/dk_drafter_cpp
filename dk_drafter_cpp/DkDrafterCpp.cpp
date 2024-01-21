@@ -31,11 +31,11 @@ int main()
     playerMap->drawToConsole();
 
     PrintHelper::PrintHeader("Replace REINFORCED Tiles with LAVA");
-    playerMap->replaceBlocks(Tile::REINFORCED, Tile::TILE_DEFINITIONS_KEYWORDED["LAVA"], 1);
+    playerMap->replaceBlocks(Tile::REINFORCED, Tile::TILE_DEFINITIONS_LABELED["LAVA"], 1);
     playerMap->drawToConsole();
 
     PrintHelper::PrintHeader("Remove all ownable blocks that aren't LAIR");
-    playerMap->removeOwnableBlocksExcept(Tile::LAIR, Tile::TILE_DEFINITIONS_KEYWORDED["DIRT"], 1);
+    playerMap->removeOwnableBlocksExcept(Tile::LAIR, Tile::TILE_DEFINITIONS_LABELED["DIRT"], 1);
     playerMap->drawToConsole();
 
     PrintHelper::PrintHeader("Rescale LAIR-only map by extracting the Player Map");
