@@ -8,7 +8,7 @@ Room::Room(Map* floorPlan, std::shared_ptr<TileDefinition> activity) : floorPlan
 SurfaceSet Room::extractGeometry() {
 	// Get activity tiles
 	std::vector<Tile> tiles = floorPlan->getTilesByType(activity->keyword);
-	// Get envelope Tiles
+	/* Build the SurfaceSet */
 	SurfaceSet adjacencies;
 	for (size_t tileID = 0; tileID < tiles.size(); tileID++) {
 		size_t x	= tiles[tileID].x;
@@ -21,5 +21,7 @@ SurfaceSet Room::extractGeometry() {
 	return adjacencies;
 }
 /*=== Getters ===*/
+/* Room's X position on the world coordinate system */
 size_t Room::wcsX() { return floorPlan->wcsX; }
+/* Room's Y position on the world coordinate system */
 size_t Room::wcsY() { return floorPlan->wcsY; }

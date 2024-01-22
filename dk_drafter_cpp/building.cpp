@@ -1,10 +1,10 @@
 #include "building.h"
 
 /*=== Constructors ===*/
+/* Keeping c++ happy. Don't use */
 Building::Building() {}
-Building::Building(Map* map) : map(map){
-	extractRooms();
-}
+/* Create with a Player Map. Ideally, a single Player but go nuts */
+Building::Building(Map* map) : map(map){}
 
 /*=== Instance methods ===*/
 void Building::extractRooms() {
@@ -15,22 +15,34 @@ void Building::extractRooms() {
 	// With every activity, extract a Map containing only Tile of that kind + non-ownable boundary surfaces;
 	for (size_t activityTypeID = 0; activityTypeID < activityTypes.size(); activityTypeID++) {
 		std::shared_ptr<TileDefinition> tileDefinition = Tile::TILE_DEFINITIONS_LABELED[activityTypes[activityTypeID]];
+		/* Clone the floor Plan */
 		Map* activityMap			= map->clone();
+		/* Reduce the Map to only the target activity */
 		activityMap->removeOwnableBlocksExcept(tileDefinition->label, Tile::TILE_DEFINITIONS_LABELED[Tile::DIRT], 1);
+		/* Extract the activty Map. Rescaled on boundaries */
 		activityMap					= activityMap->extractPlayerMap(1);
 		Room room					= Room(activityMap, tileDefinition);
 		rooms.push_back(room);;
 	}
 }
+/* 
+	Create SBEM survey for SBEM service
+
+	Note: The SBEM service creates basic instances of each SbemSurveyObject.type. Anything that's to be
+	overwritten or removed should be added in this method.
+
+	E.g: CONSTRUCTION and GLASS U-VALUEs
+*/
 SbemSurvey Building::toSbemSurvey() {
 	SbemSurvey survey;
-	std::vector<SbemSurveyObject> constructions;
-	std::vector<SbemSurveyObject> glasses;
-	std::vector<SbemSurveyObject> dhws;
-	std::vector<SbemSurveyObject> hvacs;
-	/*=== Define constructions ===*/
-	SbemSurveyObject construction;
-	// Outside
+	/*=== Define constructions ===
+		Create constructions that define the thermal properties of surfaces.
+
+		TODO: Values will eventually come from Level-specific templates
+
+		V1: All surfaces assumed be exterior.
+		V2: TODO: Reference the World Map to check for adjacencies
+	*/
 	SbemSurveyObject reinforced		= SbemSurveyObject(Tile::REINFORCED, SbemSurveyObject::CONSTRUCTION);
 	reinforced.setStringProperty("METAL-CLADDING", "YES");
 	reinforced.setNumericProperty("U-VALUE", 0.5);
@@ -69,7 +81,16 @@ SbemSurvey Building::toSbemSurvey() {
 		{Tile::DIRT, dirt}, {Tile::REINFORCED, reinforced}, {Tile::LAVA, lava}, {Tile::WATER, water},
 		{Tile::CLAIMED, claimed}, {Tile::UNCLAIMED, unclaimed}, {Tile::IMPENETRABLE, impenetrable}
 	};
-	/*=== Define glasses ===*/
+	/*=== Define glasses ===
+		Ok, hear me out. Lava, water and unclaimed don't exist in SBEM, but they need to
+		here. To account for them, they are being modelled as external surfaces with glazing. U-VALUES 
+		are generously assumed to accommodate differences in temperature.
+
+		Highly-ventilated spaces were considered but they aren't intended for this purpose. In any case,
+			  it'd be a major pain to sense-check results and models would be too volatile. 
+
+		Tl;dr: Trust me, I'm a doctor!
+	*/
 	SbemSurveyObject lavaGlass		= SbemSurveyObject("LAVA", SbemSurveyObject::GLASS);
 	lavaGlass.setNumericProperty("U-VALUE", 1.4);
 	survey.glasses.push_back(lavaGlass);
@@ -103,12 +124,18 @@ SbemSurvey Building::toSbemSurvey() {
 		zone.setStringProperty("ACTIVITY-NAME", Tile::TILE_SBEM_ACTIVITIES[room.activity->label]["NAME"]);
 		zone.setNumericProperty("HEIGHT", 3);
 		
-		
 		/* Walls */
 		SurfaceSet surfaces		= room.extractGeometry();
 		float height			= zone.getNumericProperty("HEIGHT");
 		std::vector<Tile> tiles;
 		SbemSurveyObject window;
+		/* 
+			There are 8 environment TileDefinition and 4 orientations in DK. For each pairing, create
+			walls and windows. 			
+			
+				- IF the type and orientation has surfaces. Add them to the survey
+				- IF the surface type is defined as having windows. Add them.
+		*/
 		for (size_t envKeywordID = 0; envKeywordID < Tile::NO_ENVIRONMENT_TYPES; envKeywordID++) {
 			std::string envType			= Tile::ENVIRONMENT_TYPES[envKeywordID];
 			SbemSurveyObject northWall	= SbemSurveyObject("WEST-WALL - " + zone.name, SbemSurveyObject::WALL);
@@ -154,8 +181,8 @@ SbemSurvey Building::toSbemSurvey() {
 
 		}
 		/* Associations */
-		hvac.children.push_back(zone);
 		zone.setAssociation(SbemSurveyObject::DHW_GENERATOR, std::make_shared<SbemSurveyObject>(dhw));
+		hvac.children.push_back(zone);
 	}
 	return survey;
 }

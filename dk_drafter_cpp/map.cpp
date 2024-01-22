@@ -37,12 +37,14 @@ void Map::clear() {
 				tiles[rowID][cellID]	= Tile(Tile::TILE_DEFINITIONS_LABELED[Tile::DIRT], nullptr, cellID, rowID);
 		}
 }
+/* Find a Player by ID */
 std::shared_ptr<Player> Map::findPlayer(int id) {
 	for (size_t playerID = 0; playerID < players.size(); playerID++)
 		if (players[playerID].getID() == id)
 			return std::make_shared<Player>(players[playerID]);	// make_shared necessary?
 	return nullptr;
 }
+/* Add a Player if they don't exist yet */
 void Map::addPlayer(Player player) {
 	for (size_t playerID = 0; playerID < players.size(); playerID++)
 		if (player.getID() == players[playerID].getID())
@@ -75,43 +77,46 @@ bool Map::parseCSV(const std::string& csvPath) {
 			by retaining only relevant characters. We don't need spaces since the 
 			Tile::parseLabel method ignores them, so we can remove them as well.
 		*/
-		
 		std::vector<std::string> rowData;
 		row.erase(std::remove_if(row.begin(), row.end(), [](unsigned char c) {
 			return !std::isalnum(c) && !std::isalpha(c) && c != ',';
 			}), row.end());
+		/* Parse row */
 		std::stringstream rowStream(row);
 		std::string cell;
 		int cellID = 0;
 		while (std::getline(rowStream, cell, ',')) {
+			/* Parse the Tile label. E.g ha1 = HATCHERY owned by Player 1. Defaults to Player 1 for ownable Tiles */
 			std::tuple<bool, std::shared_ptr<TileDefinition>, int> tileInfo = Tile::parseLabel(cell);
-			if (!std::get<0>(tileInfo))
-				std::cout << "\nSomething's wrong with label: " << cell;
-			
 			int playerID					= std::get<2>(tileInfo);
+			// Look for a Player by number. If they don't exist, create them
 			std::shared_ptr<Player> player	= findPlayer(playerID);
 			if (player == nullptr) {
 				player  = std::make_shared<Player>(Player("Player " + std::to_string(playerID), playerID));
 				addPlayer(*player);
 			}
-				
 			tiles[rowID][cellID].update(std::get<1>(tileInfo), player);
 			// We only care about the Map defined boundaries (maybe just do it anyway?)
 			cellID++;
+			// Real dungeon and Map dungeon dimensions are indepdent
 			if (cellID == width)
 				break;
-
 		}
 		rowID++;
 		// We only care about the Map defined boundaries (maybe just do it anyway?)
 		if (rowID == height)
 			break;
 	}
+	/*
+		Method could be void, currently.
 
-	
+		The point of the bool was for when Tile::parseTile failed to parse a label. A worry for 
+		another day.
+	*/
 	return true;
 }
 /*=== Getters ===*/
+/* Get a list of all the activities of the current Dugenon. ALl Players if a multi-Player Map*/
 std::vector<std::string> Map::getActivityTypes() {
 	/* Create map of all Tile types with flag for is present in Map */
 	std::unordered_map<std::string, bool> activityTypes;
@@ -168,13 +173,13 @@ Map* Map::extractPlayerMap(int id) {
 				if (rowID > maxY) maxY = rowID;
 			}
 		}
-	minX--;
-	maxX++;
-	minY--;
-	maxY++;
+	if(minX != 0) minX--;
+	if(maxX != width) maxX++;
+	if(minY != 0) minY--;
+	if(maxY != height) maxY++;
 	size_t playerMapWidth = maxX - minX  + 1;
 	size_t playerMapHeight = maxY - minY + 1;
-
+	
 	/*
 		Build the Player Map
 	*/
@@ -196,6 +201,7 @@ Map* Map::clone() {
 			map->tiles[rowID][cellID].update(tiles[rowID][cellID].definition, tiles[rowID][cellID].player);
 	return map;
 }
+/* Draw the passed Map's owned Tiles over this Map IF The existing Tile is DIRT */
 void Map::merge(Map* map) {
 	for (size_t rowID = 0; rowID < height; rowID++)
 		for (size_t cellID = 0; cellID < width; cellID++)
@@ -224,7 +230,6 @@ void Map::removeOwnableBlocksExcept(std::string keep, std::shared_ptr<TileDefini
 /*=== Drawing and what not ===*/
 
 void Map::drawToConsole() {
-
 	for (size_t rowID = 0; rowID < height; rowID++) {
 		std::string row;
 		for (size_t cellID = 0; cellID < width; cellID++) {
@@ -246,8 +251,8 @@ void Map::drawToConsole() {
 	}
 
 }
+/* Draw to console but replace Tile labels with Player numbers or - */
 void Map::drawPlayersToConsole() {
-
 	for (size_t rowID = 0; rowID < height; rowID++) {
 		std::string row;
 		for (size_t cellID = 0; cellID < width; cellID++) {

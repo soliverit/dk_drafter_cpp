@@ -7,7 +7,7 @@
 // Project
 #include "tile.h"
 /*
-
+	
 */
 class SurfaceSet {
 public:
@@ -23,8 +23,10 @@ public:
 	/*=== Instance methods ===*/
 	/* Add a Tile to the set */
 	void addTile(ORIENTATION orientation, Tile tile);
+	/* Return Tiles associated with a compass direction and TileDefintion (yeah, should've done enums at the start) */
 	std::vector<Tile> getTiles(ORIENTATION orientation, std::string tileDefinitionLabel);
 	/*=== Instance members ===*/
 protected:
+	/* The Tile map. Keep it protected to enforce read/write */
 	std::unordered_map<ORIENTATION, std::unordered_map<std::string, std::vector<Tile>>> tiles;
 };

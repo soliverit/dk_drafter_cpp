@@ -1,5 +1,5 @@
 #pragma once
-#define TILE_MAP_SIZE 128
+#define TILE_MAP_SIZE 170
 /*===
 	Includes
 ===*/
@@ -16,7 +16,6 @@
 */
 class Map {
 public:
-	static const int MAP_SIZE;
 	/*=== Constructors ===*/
 	/* Default */
 	Map();
@@ -29,8 +28,8 @@ public:
 	/* Construct with custom size, world coordinate position and predefined Players */
 	Map(size_t width, size_t height, size_t wcsX, size_t wcsY, std::vector<Player> players);
 	/*=== Static members ===*/
-	/* Compass directions */
-	
+	/* Max Tile width/height for DK*/
+	static const int MAP_SIZE;
 	// Instance methods
 	/* Replace all Tiles in the tiles[][] array with unowned Tile::DIRT Tiles*/
 	void clear();

@@ -13,16 +13,16 @@ class Room {
 public:
 	Room();
 	Room(Map* floorPlan, std::shared_ptr<TileDefinition> activity);
-	// Instance methods
+	/*=== Instance mehtods ===*/
 	SurfaceSet extractGeometry();
-	/* Global positioning forwarding methods (points to Map->wcsX/wcsY) */
+	/* Room's X position on the world coordinate system */
 	size_t wcsX();
+	/* Room's Y position on the world coordinate system */
 	size_t wcsY();
-	// Instance members
+	/*=== Instance members ===*/
 	Map* floorPlan;
+	/* The TileDefinition that represent the activity. Hatchery, Lair, etc. */
 	std::shared_ptr<TileDefinition> activity;
-	std::vector<Tile> floorTiles;
-	std::unordered_map<std::string, std::vector<Tile>> wallTiles;
+	/* Ceiling height. Used in SbemZone */
 	float height;
-	unsigned int sbemID;
 };
