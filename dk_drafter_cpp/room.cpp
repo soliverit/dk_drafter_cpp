@@ -21,6 +21,15 @@ SurfaceSet Room::extractGeometry() {
 	return adjacencies;
 }
 /*=== Getters ===*/
+/* Get the room area in terms No. of activityType Tiles */
+float Room::area() {
+	float area = 0;
+	for (size_t rowID = 0; rowID < floorPlan->height; rowID++)
+		for (size_t cellID = 0; cellID < floorPlan->width; cellID++)
+			if (floorPlan->tiles[rowID][cellID].definition->label == activity->label)
+				area += 1;
+	return area;
+}
 /* Room's X position on the world coordinate system */
 size_t Room::wcsX() { return floorPlan->wcsX; }
 /* Room's Y position on the world coordinate system */

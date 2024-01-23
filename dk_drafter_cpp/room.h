@@ -14,7 +14,10 @@ public:
 	Room();
 	Room(Map* floorPlan, std::shared_ptr<TileDefinition> activity);
 	/*=== Instance mehtods ===*/
+	/* Get a surface set of all the adjacent Tile::ENVIRONMENT_TYPES */
 	SurfaceSet extractGeometry();
+	/* Get the area (No. of activity floor tiles) */
+	float area();
 	/* Room's X position on the world coordinate system */
 	size_t wcsX();
 	/* Room's Y position on the world coordinate system */

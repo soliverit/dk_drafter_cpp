@@ -17,8 +17,14 @@ struct SbemSurvey {
 	/*=== Constructors ===*/
 	SbemSurvey();
 	/*=== Instance methods ===*/
-	std::string toJSON();
+	std::string toInp();
 	/*=== Instance members ===*/
+	/* SbemGeneral */
+	SbemSurveyObject general;
+	/* SbemRecProject (pointless object but needs to be there */
+	SbemSurveyObject recProject;
+	/* SbemCompliance */
+	SbemSurveyObject compliance;
 	/* SbemConstruction details */
 	std::vector<SbemSurveyObject> constructions;
 	/* SbemGlass details */

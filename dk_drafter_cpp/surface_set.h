@@ -20,6 +20,11 @@ public:
 		South,
 		West
 	};
+	static const std::string NORTH;
+	static const std::string EAST;
+	static const std::string SOUTH;
+	static const std::string WEST;
+	static const std::string HORIZONTAL;
 	/*=== Instance methods ===*/
 	/* Add a Tile to the set */
 	void addTile(ORIENTATION orientation, Tile tile);

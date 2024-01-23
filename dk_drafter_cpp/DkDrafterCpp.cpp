@@ -9,26 +9,25 @@
 #include "building.h"
 #include "print_helper.h"
 // Some useful constants
-const int MAP_SIZE = 26;
+const int MAP_SIZE = 40;
 const std::string CSV_PATH = "C:/workspaces/dungeon_keeper/dungeon_drafter/drafts/example.csv";
 int main()
 {  
-    /* Screen stuff */
-     // Get handle to the console window
+    // Get handle to the console window
     HWND consoleWindow = GetConsoleWindow();
 
-    // Set the console window size
-    SMALL_RECT windowSize = { 0, 0, 80, 25 };  // Adjust the values as needed
-    SetConsoleWindowInfo(consoleWindow, TRUE, &windowSize);
+    // Set the console window position and size
+    SetWindowPos(consoleWindow, HWND_TOP, 0, 0, 800, 600, SWP_SHOWWINDOW);
 
-    // Set the console window position
-    COORD bufferSize = { 20, 25 };  // Adjust the values as needed
-    SetConsoleScreenBufferSize(consoleWindow, bufferSize);
+    // Set the console screen buffer size
+    COORD bufferSize = { 10, 10 };  // Adjust the values as needed
+    SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), bufferSize);
+
 
     /*===
         Do stuff here.
     ===*/
-    Map* map = new Map(MAP_SIZE, 18, {Player("Player 1", 1), Player("Player 2", 2)});
+    Map* map = new Map(MAP_SIZE, 40, {Player("Player 1", 1), Player("Player 2", 2)});
     if (!map->parseCSV(CSV_PATH)) {
         std::cout << "\nProbably couldn't find the CSV";
         return 0;
@@ -41,11 +40,13 @@ int main()
     Map* playerMap = map->extractPlayerMap(1);
     playerMap->drawToConsole();
 
-    return 0;
-    //Building building   = Building(map);
+  
+    Building building   = Building(map);
+    PrintHelper::PrintHeader("Do the survey");
 
-    //SbemSurvey survey   = building.toSbemSurvey();
- 
+    SbemSurvey survey   = building.toSbemSurvey();
+    std::cout << survey.toInp();
+    return 0;
   
     Map* playerMap2 = playerMap->clone();
     playerMap2->drawPlayersToConsole();

@@ -18,19 +18,31 @@ public:
 	SbemSurveyObject(std::string name, std::string type);
 	/*=== Static members ===*/
 	
-	static const std::string CONSTRUCTION;	// Literally just CONSTRUCTION
-	static const std::string DOOR;			// Literally just DOOR
-	static const std::string DHW_GENERATOR; // DHW-GENERATOR
-	static const std::string GLASS;			// Literally just GLASS
-	static const std::string HVAC_SYSTEM;	// HVAC-SYSTEM	
-	static const std::string WALL;			// Literally just WALL
-	static const std::string WINDOW;		// Literally just WINDOW
-	static const std::string ZONE;			// Literally just ZONE
+
+	static const std::string COMPLIANCE;			// Literally just COMPLIANCE
+	static const std::string CONSTRUCTION;			// Literally just CONSTRUCTION
+	static const std::string DOOR;					// Literally just DOOR
+	static const std::string DHW_GENERATOR;			// DHW-GENERATOR
+	static const std::string GLASS;					// Literally just GLASS
+	static const std::string GENERAL;				// Literally just GENERAL
+	static const std::string HVAC_SYSTEM;			// HVAC-SYSTEM	
+	static const std::string REC_PROJECT;			// Literally just REC-PROJECT
+	static const std::string WALL;					// Literally just WALL
+	static const std::string WINDOW;				// Literally just WINDOW
+	static const std::string ZONE;					// Literally just ZONE
 	/* Common keywords */
-	static const std::string AREA;			// Literally just AREA
+	static const std::string AREA;					// Literally just AREA
+	static const std::string HEIGHT;				// Literally just HEIGHT
+	static const std::string PITCH	;				// Literally just PITCH
+	static const std::string ORIENTATION;			// Literally just ORIENTATION
+	static const std::string TYPE;					// Literally just TYPE
+	static const std::string TYPE_ENV;				// Literally just TYPE-ENV
+	static const std::string EXTERIOR;				// Literally just Exterior
+	static const std::string ROOF	;				// Literally just Roof
+	static const std::string FLORR_OR_CEILING;		// Literally just Floor or Ceiling
 	/*=== Instance methods ===*/
 	/* Convert survy to JSON - TODO: Serialise someway or another s*/
-	std::string toJSON();
+	std::string toInpObject();
 	/*=== Instance members ===*/
 	/* SBEM object type */
 	std::string type;
